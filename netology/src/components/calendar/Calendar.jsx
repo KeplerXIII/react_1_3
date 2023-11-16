@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable react/prop-types */
 import { format, addDays } from 'date-fns'
+import getDaysInMonth from 'date-fns/getDaysInMonth'
 import { ru } from 'date-fns/locale'
 
 import './Calendar.css'
@@ -25,6 +26,7 @@ export default function Calendar ({ date }) {
     const now = date
 
     const formDate = {
+        daysInMonth: getDaysInMonth(now),
         thisDayNum: format(now, 'dd'),
         thisDayName: format(now, 'EEEE',  {locale: ru}),
         thisMonthName: format(now, 'MMMM', {locale: ru}),
@@ -41,15 +43,21 @@ export default function Calendar ({ date }) {
         monthDates.push(Number(format(beginDate, 'dd')))
     }
 
+    console.log(formDate.daysInMonth)
+
     function DateFormer(index, date, begin, end, classNameBefore, classNameAfter) {
             if (index >= begin && index < end) {
-                if (date === Number(formDate.thisDayNum)) {
+                if (date === Number(formDate.thisDayNum) && index >= monthDates.indexOf(1) && index < monthDates.indexOf(1) + formDate.daysInMonth) {
+                    console.log(`index is ${index} and dif is ${formDate.dayStartDif}`)
                     return <td className="ui-datepicker-today"> {date} </td>
-                } 
-                if (date < Number(monthDates[begin])) {
+                }
+                if (date > Number(monthDates[end])) {
                     return <td className={classNameBefore}> {date} </td>
                 }
-                return <td className={classNameAfter}> {date} </td>
+                if (date < Number(monthDates[begin])) {
+                    return <td className={classNameAfter}> {date} </td>
+                }
+                return <td> {date} </td>
             }
         }
     
@@ -92,19 +100,19 @@ export default function Calendar ({ date }) {
                 </thead>
                 <tbody>
                 <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 0, 7, '', 'ui-datepicker-other-month'))}
+                    {monthDates.map((date, index) => DateFormer(index, date, 0, 7, 'ui-datepicker-other-month', ''))}
                 </tr>
                 <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 7, 14, 'ui-datepicker-other-month', ''))}
+                    {monthDates.map((date, index) => DateFormer(index, date, 7, 14, '', ''))}
                 </tr>
                 <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 14, 21, 'ui-datepicker-other-month', ''))}
+                    {monthDates.map((date, index) => DateFormer(index, date, 14, 21, '', ''))}
                 </tr>
                 <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 21, 28, 'ui-datepicker-other-month', ''))}
+                    {monthDates.map((date, index) => DateFormer(index, date, 21, 28, '', ''))}
                 </tr>
                 <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 28, 35, 'ui-datepicker-other-month', ''))}
+                    {monthDates.map((date, index) => DateFormer(index, date, 28, 35, 'ui-datepicker-other-month', 'ui-datepicker-other-month'))}
                 </tr>
                 </tbody>
             </table>
