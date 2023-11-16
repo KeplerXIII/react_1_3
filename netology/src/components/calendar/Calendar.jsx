@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 /* eslint-disable react/prop-types */
 import { format, addDays } from 'date-fns'
 import { ru } from 'date-fns/locale'
@@ -5,21 +6,53 @@ import { ru } from 'date-fns/locale'
 import './Calendar.css'
 
 function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
+const weekData = {
+    'понедельник': 1,
+    'вторник': 2,
+    'среда': 3,
+    'четверг': 4,
+    'пятница': 5,
+    'суббота': 6,
+    'воскресенье': 7,
+
 }
 
 export default function Calendar ({ date }) {
 
     const now = date
-    
+
     const formDate = {
-        prevMonthLastDay: format(addDays(now, -format(now, 'dd')), 'dd'),
         thisDayNum: format(now, 'dd'),
         thisDayName: format(now, 'EEEE',  {locale: ru}),
         thisMonthName: format(now, 'MMMM', {locale: ru}),
         thisMonthNameBase: format(now, 'LLLL', {locale: ru}),
         thisYear: format(now, 'yyyy'),
+        dayStartDif: weekData[format(now, 'EEEE',  {locale: ru})] - format(now, 'dd') % 7
       }
+
+    let beginDate = addDays(now, - (Number(formDate.thisDayNum) + formDate.dayStartDif) + 1)
+    let monthDates = [Number(format(beginDate, 'dd'))]
+
+    while (monthDates.length < 35) {
+        beginDate = addDays(beginDate, 1)
+        monthDates.push(Number(format(beginDate, 'dd')))
+    }
+
+    function DateFormer(index, date, begin, end, classNameBefore, classNameAfter) {
+            if (index >= begin && index < end) {
+                if (date === Number(formDate.thisDayNum)) {
+                    return <td className="ui-datepicker-today"> {date} </td>
+                } 
+                if (date < Number(monthDates[begin])) {
+                    return <td className={classNameBefore}> {date} </td>
+                }
+                return <td className={classNameAfter}> {date} </td>
+            }
+        }
+    
 
     return (
         <div className="ui-datepicker">
@@ -59,22 +92,19 @@ export default function Calendar ({ date }) {
                 </thead>
                 <tbody>
                 <tr>
-                    <td className="ui-datepicker-other-month">27</td>
-                    <td className="ui-datepicker-other-month">28</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td>5</td>
+                    {monthDates.map((date, index) => DateFormer(index, date, 0, 7, '', 'ui-datepicker-other-month'))}
                 </tr>
                 <tr>
-                    <td>6</td>
-                    <td>7</td>
-                    <td className="ui-datepicker-today">8</td>
-                    <td>9</td>
-                    <td>10</td>
-                    <td>11</td>
-                    <td>12</td>
+                    {monthDates.map((date, index) => DateFormer(index, date, 7, 14, 'ui-datepicker-other-month', ''))}
+                </tr>
+                <tr>
+                    {monthDates.map((date, index) => DateFormer(index, date, 14, 21, 'ui-datepicker-other-month', ''))}
+                </tr>
+                <tr>
+                    {monthDates.map((date, index) => DateFormer(index, date, 21, 28, 'ui-datepicker-other-month', ''))}
+                </tr>
+                <tr>
+                    {monthDates.map((date, index) => DateFormer(index, date, 28, 35, 'ui-datepicker-other-month', ''))}
                 </tr>
                 </tbody>
             </table>
