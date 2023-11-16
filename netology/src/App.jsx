@@ -1,7 +1,7 @@
 import './App.css'
 import Calendar from './components/calendar/Calendar'
 
-const now = new Date("2023-02-01")
+const now = new Date()
 
 
 function App() {

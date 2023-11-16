@@ -38,17 +38,20 @@ export default function Calendar ({ date }) {
     let beginDate = addDays(now, - (Number(formDate.thisDayNum) + formDate.dayStartDif) + 1)
     let monthDates = [Number(format(beginDate, 'dd'))]
 
-    while (monthDates.length < 35) {
+    while (monthDates.length < ((formDate.dayStartDif + formDate.daysInMonth) > 35 ? 43 : 35)) {
+        console.log(formDate.dayStartDif)
         beginDate = addDays(beginDate, 1)
         monthDates.push(Number(format(beginDate, 'dd')))
     }
 
-    console.log(formDate.daysInMonth)
+    console.log(monthDates)
 
     function DateFormer(index, date, begin, end, classNameBefore, classNameAfter) {
             if (index >= begin && index < end) {
+                if (index >= monthDates.length - 1) {
+                    return
+                }
                 if (date === Number(formDate.thisDayNum) && index >= monthDates.indexOf(1) && index < monthDates.indexOf(1) + formDate.daysInMonth) {
-                    console.log(`index is ${index} and dif is ${formDate.dayStartDif}`)
                     return <td className="ui-datepicker-today"> {date} </td>
                 }
                 if (date > Number(monthDates[end])) {
@@ -112,7 +115,10 @@ export default function Calendar ({ date }) {
                     {monthDates.map((date, index) => DateFormer(index, date, 21, 28, '', ''))}
                 </tr>
                 <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 28, 35, 'ui-datepicker-other-month', 'ui-datepicker-other-month'))}
+                    {monthDates.map((date, index) => DateFormer(index, date, 28, 35, '', 'ui-datepicker-other-month'))}
+                </tr>
+                <tr>
+                    {monthDates.map((date, index) => DateFormer(index, date, 35, 42, '', 'ui-datepicker-other-month'))}
                 </tr>
                 </tbody>
             </table>
