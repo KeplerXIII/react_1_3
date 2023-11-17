@@ -1,5 +1,4 @@
-/* eslint-disable react/jsx-key */
-/* eslint-disable react/prop-types */
+import PropTypes from 'prop-types';
 import { format, addDays } from 'date-fns'
 import getDaysInMonth from 'date-fns/getDaysInMonth'
 import { ru } from 'date-fns/locale'
@@ -20,6 +19,10 @@ const weekData = {
     'воскресенье': 0,
 
 }
+
+Calendar.propTypes = {
+    date: PropTypes.instanceOf(Date).isRequired,
+  }
 
 export default function Calendar ({ date }) {
 
@@ -52,12 +55,12 @@ export default function Calendar ({ date }) {
                     return
                 }
                 if (date.month != formDate.thisMonthName) {
-                    return <td className={otherMonthClass}> {Number(date.number)} </td>
+                    return <td key={index} className={otherMonthClass}> {Number(date.number)} </td>
                 }
                 if (date.number === formDate.thisDayNum) {
-                    return <td className={todayDayClass}> {Number(date.number)} </td>
+                    return <td key={index} className={todayDayClass}> {Number(date.number)} </td>
                 }
-                return <td> {Number(date.number)} </td>
+                return <td key={index}> {Number(date.number)} </td>
             }
         }
 
