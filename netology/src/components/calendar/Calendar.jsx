@@ -45,7 +45,7 @@ export default function Calendar ({ date }) {
 
     function DateFormer(index, date, begin, end, classNameBefore, classNameAfter) {
             if (index >= begin && index < end) {
-                if (index >= monthDates.length - 1) {
+                if (index >= monthDates.length) {
                     return
                 }
                 if (date === Number(formDate.thisDayNum) && index >= monthDates.indexOf(1) && index < monthDates.indexOf(1) + formDate.daysInMonth) {
