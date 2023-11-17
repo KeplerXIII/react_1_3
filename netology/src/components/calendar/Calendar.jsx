@@ -43,6 +43,8 @@ export default function Calendar ({ date }) {
         monthDates.push({number: format(beginDate, 'dd'), month: format(beginDate, 'MMMM', {locale: ru})})
     }
 
+    const otherMonthClass = 'ui-datepicker-other-month'
+    const todayDayClass = 'ui-datepicker-today'
 
     function DateFormer(index, date, begin, end) {
             if (index >= begin && index < end) {
@@ -50,10 +52,10 @@ export default function Calendar ({ date }) {
                     return
                 }
                 if (date.month != formDate.thisMonthName) {
-                    return <td className='ui-datepicker-other-month'> {Number(date.number)} </td>
+                    return <td className={otherMonthClass}> {Number(date.number)} </td>
                 }
                 if (date.number === formDate.thisDayNum) {
-                    return <td className='ui-datepicker-today'> {Number(date.number)} </td>
+                    return <td className={todayDayClass}> {Number(date.number)} </td>
                 }
                 return <td> {Number(date.number)} </td>
             }
@@ -96,24 +98,13 @@ export default function Calendar ({ date }) {
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 0, 7))}
-                </tr>
-                <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 7, 14))}
-                </tr>
-                <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 14, 21))}
-                </tr>
-                <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 21, 28))}
-                </tr>
-                <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 28, 35))}
-                </tr>
-                <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 35, 42))}
-                </tr>
+                    {Array.from({ length: 6 }, (_, row) => (
+                        <tr key={row}>
+                        {monthDates.map((date, index) =>
+                            DateFormer(index, date, row * 7, (row + 1) * 7)
+                        )}
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>
