@@ -11,13 +11,13 @@ function capitalizeFirstLetter(string) {
 }
 
 const weekData = {
-    'понедельник': 1,
-    'вторник': 2,
-    'среда': 3,
-    'четверг': 4,
-    'пятница': 5,
-    'суббота': 6,
-    'воскресенье': 7,
+    'понедельник': 6,
+    'вторник': 5,
+    'среда': 4,
+    'четверг': 3,
+    'пятница':2,
+    'суббота': 1,
+    'воскресенье': 0,
 
 }
 
@@ -32,19 +32,16 @@ export default function Calendar ({ date }) {
         thisMonthName: format(now, 'MMMM', {locale: ru}),
         thisMonthNameBase: format(now, 'LLLL', {locale: ru}),
         thisYear: format(now, 'yyyy'),
-        dayStartDif: weekData[format(now, 'EEEE',  {locale: ru})] - format(now, 'dd') % 7
+        dayStartDif: 7 - ((Number(format(now, 'dd')) +  weekData[format(now, 'EEEE',  {locale: ru})])  % 7)
       }
 
     let beginDate = addDays(now, - (Number(formDate.thisDayNum) + formDate.dayStartDif) + 1)
     let monthDates = [Number(format(beginDate, 'dd'))]
 
     while (monthDates.length < ((formDate.dayStartDif + formDate.daysInMonth) > 35 ? 43 : 35)) {
-        console.log(formDate.dayStartDif)
         beginDate = addDays(beginDate, 1)
         monthDates.push(Number(format(beginDate, 'dd')))
     }
-
-    console.log(monthDates)
 
     function DateFormer(index, date, begin, end, classNameBefore, classNameAfter) {
             if (index >= begin && index < end) {
