@@ -35,32 +35,29 @@ export default function Calendar ({ date }) {
         dayStartDif: 7 - ((Number(format(now, 'dd')) +  weekData[format(now, 'EEEE',  {locale: ru})])  % 7)
       }
 
-    let beginDate = addDays(now, - (Number(formDate.thisDayNum) + formDate.dayStartDif) + 1)
-    let monthDates = [Number(format(beginDate, 'dd'))]
+    let beginDate = addDays(now, - (Number(formDate.thisDayNum) + formDate.dayStartDif))
+    let monthDates = []
 
     while (monthDates.length < ((formDate.dayStartDif + formDate.daysInMonth) > 35 ? 43 : 35)) {
         beginDate = addDays(beginDate, 1)
-        monthDates.push(Number(format(beginDate, 'dd')))
+        monthDates.push({number: format(beginDate, 'dd'), month: format(beginDate, 'MMMM', {locale: ru})})
     }
 
-    function DateFormer(index, date, begin, end, classNameBefore, classNameAfter) {
+
+    function DateFormer(index, date, begin, end) {
             if (index >= begin && index < end) {
                 if (index >= monthDates.length) {
                     return
                 }
-                if (date === Number(formDate.thisDayNum) && index >= monthDates.indexOf(1) && index < monthDates.indexOf(1) + formDate.daysInMonth) {
-                    return <td className="ui-datepicker-today"> {date} </td>
+                if (date.month != formDate.thisMonthName) {
+                    return <td className='ui-datepicker-other-month'> {Number(date.number)} </td>
                 }
-                if (date > Number(monthDates[end])) {
-                    return <td className={classNameBefore}> {date} </td>
+                if (date.number === formDate.thisDayNum) {
+                    return <td className='ui-datepicker-today'> {Number(date.number)} </td>
                 }
-                if (date < Number(monthDates[begin])) {
-                    return <td className={classNameAfter}> {date} </td>
-                }
-                return <td> {date} </td>
+                return <td> {Number(date.number)} </td>
             }
         }
-    
 
     return (
         <div className="ui-datepicker">
@@ -100,22 +97,22 @@ export default function Calendar ({ date }) {
                 </thead>
                 <tbody>
                 <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 0, 7, 'ui-datepicker-other-month', ''))}
+                    {monthDates.map((date, index) => DateFormer(index, date, 0, 7))}
                 </tr>
                 <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 7, 14, '', ''))}
+                    {monthDates.map((date, index) => DateFormer(index, date, 7, 14))}
                 </tr>
                 <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 14, 21, '', ''))}
+                    {monthDates.map((date, index) => DateFormer(index, date, 14, 21))}
                 </tr>
                 <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 21, 28, '', ''))}
+                    {monthDates.map((date, index) => DateFormer(index, date, 21, 28))}
                 </tr>
                 <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 28, 35, '', 'ui-datepicker-other-month'))}
+                    {monthDates.map((date, index) => DateFormer(index, date, 28, 35))}
                 </tr>
                 <tr>
-                    {monthDates.map((date, index) => DateFormer(index, date, 35, 42, '', 'ui-datepicker-other-month'))}
+                    {monthDates.map((date, index) => DateFormer(index, date, 35, 42))}
                 </tr>
                 </tbody>
             </table>
